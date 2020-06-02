@@ -35,13 +35,21 @@ registerPlugin({
   const backend = require('backend');
   const event = require('event');
   const helpers = require('helpers');
-  const dbc = db.connect({ driver: 'mysql', host: config.host, username: config.username, password: config.password, database: config.database }, function(err) {
-      if (err) {
-           engine.log(err);
-      } else {
-        engine.log('connection successful');
-      }
-  });
+  let dbc = null; 
+
+  function reconnect() {
+    if(!dbc) {
+      dbc = db.connect({ driver: 'mysql', host: config.host, username: config.username, password: config.password, database: config.database }, function(err) {
+        if (err) {
+             engine.log(err);
+        } else {
+          engine.log('connection successful');
+        }
+      });
+    }
+  }
+  reconnect();
+  setInterval(reconnect, 1000 * 3600);
   
   let channelIdMap = {};
   let serverId = null;

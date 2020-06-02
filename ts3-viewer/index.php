@@ -192,6 +192,9 @@
       let series = [];
       function iterChilds(tree, prefix="") {
         const data = tree.events.map(e => [e[1]*1000, e[2]]);
+        for(let i=0; i<data.length-2; i++) {
+          data[i][1] = data[i+1][1];
+        }
         const name = prefix + formatHeadings(tree.name, false);
         if(data.length > 0 && (data.length != 2 || data[0][1] != 0)) {
           series.push({
@@ -241,6 +244,8 @@
           for(const id in plots) {
             plots[id].getOptions().xaxes[0].min = axes.xaxis.min;
             plots[id].getOptions().xaxes[0].max = axes.xaxis.max;
+            if(!document.getElementById(`cb_${id}`).checked)
+              continue;
             plots[id].setupGrid();
             plots[id].draw();
           }
@@ -260,6 +265,8 @@
         let opt = plots[id].getXAxes()[0].options;
         opt.min = viewMin;
         opt.max = viewMax;
+        if(!document.getElementById(`cb_${id}`).checked)
+          continue;
         plots[id].setupGrid();
         plots[id].draw();
       }

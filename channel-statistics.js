@@ -48,6 +48,16 @@ registerPlugin({
       });
     }
   }
+
+  function remove_non_utf8(str) {
+
+    if ((str === null) || (str === ''))
+      return "";
+    else
+      str = str.toString();
+    return str.replace(/[^\w\s\[\]\-:.\/!\?\(\)äáöüéôûµÄÁÖÜß=#<>\+\*\'\\`,\"“„€&%@§~^°|;]/g, '');
+  }
+
   reconnect();
   setInterval(reconnect, 1000 * 3600);
   
@@ -57,7 +67,7 @@ registerPlugin({
     const serverinfo = backend.extended().getServerInfo();
     updateServer(serverinfo, function(id) {
       serverId = id;
-      engine.log('serverId:', serverId);
+      engine.log('serverId: ' + serverId);
       backend.getChannels().forEach(channel => updateChannel(serverId, channel, function(id) {
         channelIdMap[channel.id()] = id;
         updateChannelEvent(id, channel);
@@ -103,13 +113,13 @@ registerPlugin({
               if(!err && res.length > 0) {
                 cb(res[0].id);
               } else {
-                console.log(err, res);
+                engine.log(err, res);
               }
             });
           });
         }
       } else {
-        console.log(err, res);
+        engine.log(err, res);
       }
     });
   }
@@ -118,28 +128,28 @@ registerPlugin({
     if(!dbc || !serverId) {
       return;
     }
-    const parentId = channel.parent() ? channel.parent().id() : null;
+    const parentId = channel.parent() ? channel.parent().id() : NaN;
     dbc.query("SELECT * FROM channel WHERE channelId = ? AND serverId = ?", channel.id(), serverId, function(err, res) {
       if (!err) {
         if(res.length > 0) {
           const id = res[0].id;
           dbc.exec("UPDATE channel SET name = ?, parentId = ?, position = ?, description = ? WHERE id = ?", 
-                    channel.name(), parentId, channel.position(), channel.description(), id);
+            remove_non_utf8(channel.name()), parentId, channel.position(), remove_non_utf8(channel.description()), id);
           cb(id);
         } else {
           dbc.exec("INSERT INTO channel (channelId, name, serverId, parentId, position, description) VALUES (?, ?, ?, ?, ?, ?)", 
-            channel.id(), channel.name(), serverId, parentId, channel.position(), channel.description(), function() {
+            channel.id(), remove_non_utf8(channel.name()), serverId, parentId, channel.position(), remove_non_utf8(channel.description()), function() {
               dbc.query("SELECT id FROM channel WHERE channelId = ? AND serverId = ?", channel.id(), serverId, function(err, res) {
                 if(!err && res.length > 0) {
                   cb(res[0].id);
                 } else {
-                  console.log(err, res);
+                  engine.log(err, res);
                 }
               });
           });
         }
       } else {
-        console.log(err, res);
+        engine.log(err, res);
       }
     });
   }
@@ -152,19 +162,19 @@ registerPlugin({
     dbc.query("SELECT * FROM channelEvent WHERE channelId = ? AND date > DATE_SUB(NOW(), INTERVAL 1 MINUTE) ORDER BY date DESC LIMIT 1", id, function(err, res) {
       if(!err) {
         if(res.length > 0) {
-          engine.log('channel ' + channel.name() + ' updated to ' + clients + ' clients');
+          engine.log('channel ' + remove_non_utf8(channel.name()) + ' updated to ' + clients + ' clients');
           dbc.exec("UPDATE channelEvent SET clientCount = ? WHERE id = ?", clients, res[0].id);
         } else {
           dbc.query("SELECT * FROM channelEvent WHERE channelId = ? ORDER BY date DESC LIMIT 1", id, function(err, res) {
             if(!err && res.length > 0 && res[0].clientCount === clients)
               return;
             if(clients > 0)
-              engine.log('channel ' + channel.name() + ' has now ' + clients + ' clients');
+              engine.log('channel ' + remove_non_utf8(channel.name()) + ' has now ' + clients + ' clients');
             dbc.exec("INSERT INTO channelEvent (channelId, clientCount) VALUES (?, ?)", id, clients);
           });
         }
       } else {
-        console.log(err, res);
+        engine.log(err, res);
       }
     });
   }

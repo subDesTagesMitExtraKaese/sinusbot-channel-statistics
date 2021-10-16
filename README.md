@@ -1,23 +1,27 @@
 # Sinusbot Channel Statistics
 
-## log number of clients per channel to mysql
+## Log number of clients per channel to mysql
 
-sinusbot script `channel-statistics.js`
+With the help of the sinusbot script `channel-statistics.js` the number of connected clients for each channel will be logged to a mysql database.
 
-## display graphs on website
+## PHP graphical frontend
 
-`ts3-viewer/`
+A php viewer script is located in `ts3-viewer/`. It is an interactive flot graph implementation combined with a channel navigator.
 
-needs `ts3-viewer/connection.php`
-```php
-<?php
-$dbhost="localhost";
-$db="<db>";
-$dbuser="<user>";
-$dbpass="<pass>";
-
-$serverUid = "<ts3 server uid>";
-?>
-```
 
 ![demo](ts3-stats.png)
+
+# Installation
+
+## Backend
+tested on: *mysql-server8, sinusbot scripting v8*
+1. Create a MySQL database and import the [table definitions](createTables.sql).
+2. Copy the [channel statistics plugin](channel-statistics.js) to your sinusbot scripts folder.
+3. Restart the sinusbot client and enable the plugin.
+4. Configure the MySQL connection in the admin panel of sinusbot.
+
+## Frontend
+tested on: *mysql-server8, apache2, php7.4*
+1. Copy the `ts3-viewer/` folder into your php webroot.
+2. Insert your database credentials into `connection.php`.
+3. Done!

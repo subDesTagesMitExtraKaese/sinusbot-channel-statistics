@@ -5,13 +5,13 @@
 		<title>TS3 channel usage</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link href="stylesheet.css" rel="stylesheet" type="text/css">
-		<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../flot/excanvas.min.js"></script><![endif]-->
-		<script language="javascript" type="text/javascript" src="../flot/jquery.min.js"></script>
-		<script language="javascript" type="text/javascript" src="../flot/jquery.flot.min.js"></script>
-		<script language="javascript" type="text/javascript" src="../flot/jquery.flot.stack.min.js"></script>
-		<script language="javascript" type="text/javascript" src="../flot/jquery.flot.time.min.js"></script>
-		<script language="javascript" type="text/javascript" src="../flot/jquery.flot.navigate.min.js"></script>
-		<script language="javascript" type="text/javascript" src="../flot/jquery.flot.resize.min.js"></script>
+		<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="flot/excanvas.min.js"></script><![endif]-->
+		<script language="javascript" type="text/javascript" src="flot/jquery.min.js"></script>
+		<script language="javascript" type="text/javascript" src="flot/jquery.flot.min.js"></script>
+		<script language="javascript" type="text/javascript" src="flot/jquery.flot.stack.min.js"></script>
+		<script language="javascript" type="text/javascript" src="flot/jquery.flot.time.min.js"></script>
+		<script language="javascript" type="text/javascript" src="flot/jquery.flot.navigate.min.js"></script>
+		<script language="javascript" type="text/javascript" src="flot/jquery.flot.resize.min.js"></script>
 
     </head>
 	<body>

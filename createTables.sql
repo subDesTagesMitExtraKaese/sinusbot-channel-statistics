@@ -1,20 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.6deb4
+-- version 4.6.6deb5
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Erstellungszeit: 31. Mai 2020 um 21:37
--- Server-Version: 10.1.44-MariaDB-0+deb9u1
--- PHP-Version: 7.3.18-1+0~20200515.59+debian9~1.gbp12fa4f
+-- Erstellungszeit: 17. Okt 2021 um 00:27
+-- Server-Version: 10.3.29-MariaDB-0+deb10u1
+-- PHP-Version: 7.3.29-1~deb10u1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Datenbank: `teamspeak`
@@ -28,12 +22,12 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `channel` (
   `id` int(11) NOT NULL,
-  `channelId` text NOT NULL,
+  `channelId` int(11) NOT NULL,
   `name` text NOT NULL,
   `serverId` int(11) NOT NULL,
   `parentId` int(11) DEFAULT NULL,
   `position` int(11) NOT NULL,
-  `description` text
+  `description` text DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -44,7 +38,7 @@ CREATE TABLE `channel` (
 
 CREATE TABLE `channelEvent` (
   `id` int(11) NOT NULL,
-  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date` datetime NOT NULL DEFAULT current_timestamp(),
   `channelId` int(11) NOT NULL,
   `clientCount` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
@@ -57,7 +51,7 @@ CREATE TABLE `channelEvent` (
 
 CREATE TABLE `server` (
   `id` int(11) NOT NULL,
-  `uid` text NOT NULL,
+  `uid` varchar(50) NOT NULL,
   `name` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
@@ -81,7 +75,8 @@ ALTER TABLE `channelEvent`
 -- Indizes für die Tabelle `server`
 --
 ALTER TABLE `server`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uid` (`uid`);
 
 --
 -- AUTO_INCREMENT für exportierte Tabellen
@@ -102,6 +97,3 @@ ALTER TABLE `channelEvent`
 --
 ALTER TABLE `server`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

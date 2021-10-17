@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Erstellungszeit: 17. Okt 2021 um 00:27
+-- Erstellungszeit: 17. Okt 2021 um 13:12
 -- Server-Version: 10.3.29-MariaDB-0+deb10u1
 -- PHP-Version: 7.3.29-1~deb10u1
 
@@ -63,7 +63,8 @@ CREATE TABLE `server` (
 -- Indizes für die Tabelle `channel`
 --
 ALTER TABLE `channel`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `channelId` (`channelId`,`serverId`);
 
 --
 -- Indizes für die Tabelle `channelEvent`

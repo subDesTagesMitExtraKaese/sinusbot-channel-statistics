@@ -133,8 +133,8 @@ registerPlugin({
       if (!err) {
         if(res.length > 0) {
           const id = res[0].id;
-          dbc.exec("UPDATE channel SET name = ?, parentId = ?, position = ?, description = ? WHERE id = ?", 
-            remove_non_utf8(channel.name()), parentId, channel.position(), remove_non_utf8(channel.description()), id);
+          dbc.exec("UPDATE channel SET name = ?, parentId = ?, position = ?, description = ? WHERE channelId = ? AND serverId = ?",
+            remove_non_utf8(channel.name()), parentId, channel.position(), remove_non_utf8(channel.description()), channel.id(), serverId);
           cb(id);
         } else {
           dbc.exec("INSERT INTO channel (channelId, name, serverId, parentId, position, description) VALUES (?, ?, ?, ?, ?, ?)", 

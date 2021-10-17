@@ -227,7 +227,9 @@
           },
           yaxis: {
             zoomRange: false,
-            panRange: false
+            panRange: false,
+            min: 0,
+            tickDecimals: 0
           },
           zoom: {
             interactive: true

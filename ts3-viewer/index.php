@@ -123,7 +123,7 @@
       }
 
       if(tree.events.length > 0)
-        inp.nextSibling.textContent = tree.events[0][2] != 0 ? tree.events[0][2] : '';
+        inp.nextSibling.textContent = tree.events[tree.events.length-1][2] != 0 ? tree.events[tree.events.length-1][2] : '';
 
       inp.nextSibling.nextSibling.innerHTML = formatHeadings(tree.name);
 

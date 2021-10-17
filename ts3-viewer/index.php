@@ -79,7 +79,7 @@
     function makeTree(tree, channels, events) {
       tree.events = events.filter(e => e[0] == tree.id);
       if(tree.events.length > 0) {
-        tree.events.splice(0,0,[tree.events[0][0], (new Date()).getTime()/1000, tree.events[0][2]]);
+        tree.events.push([tree.events[tree.events.length-1][0], (new Date()).getTime()/1000, tree.events[tree.events.length-1][2]]);
       }
       tree.children = channels.filter((ch) => ch.parentId == tree.channelId).sort((a, b) => a.position - b.position);
       tree.clientCount = tree.events.reduce((sum, e) => sum+e[2], 0) / (tree.events.length > 0 ? tree.events.length : 1);
@@ -196,9 +196,6 @@
       let series = [];
       function iterChilds(tree, prefix="") {
         const data = tree.events.map(e => [e[1]*1000, e[2]]);
-        for(let i=0; i<data.length-2; i++) {
-          data[i][1] = data[i+1][1];
-        }
         const name = prefix + formatHeadings(tree.name, false);
         const maxClients = data.reduce((acc, val) => val[1] > acc ? val[1] : acc, 0);
         if(data.length > 0 && maxClients > 0) {

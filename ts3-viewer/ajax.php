@@ -9,7 +9,7 @@
     LEFT JOIN channel on channel.id = channelEvent.channelId 
     LEFT JOIN server ON server.id = channel.serverId 
     WHERE server.uid = ? 
-    ORDER BY date DESC LIMIT 10000");
+    ORDER BY date ASC LIMIT 10000");
   $stmtEvents->execute(Array($serverUid));
   $stmtChannel = $pdo->prepare("SELECT channel.id, channel.name, channel.channelId, channel.parentId, channel.position, channel.description, server.name as serverName, server.id as serverId FROM channel 
     LEFT JOIN server ON server.id = channel.serverId

@@ -11,7 +11,7 @@
     WHERE server.uid = ? 
     ORDER BY date DESC LIMIT 10000");
   $stmtEvents->execute(Array($serverUid));
-  $stmtChannel = $pdo->prepare("SELECT channel.id as id, channel.name as name, channel.channelId as channelId, channel.parentId as parentId, channel.position as position, server.name as serverName, server.id as serverId FROM channel 
+  $stmtChannel = $pdo->prepare("SELECT channel.id, channel.name, channel.channelId, channel.parentId, channel.position, channel.description, server.name as serverName, server.id as serverId FROM channel 
     LEFT JOIN server ON server.id = channel.serverId
     WHERE server.uid = ?");
   $stmtChannel->execute(Array($serverUid));

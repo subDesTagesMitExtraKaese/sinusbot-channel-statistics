@@ -47,7 +47,8 @@
     function update(init = false) {
       fetch("ajax.php").then(res=>res.json()).then(function(json) {
         console.log(json);
-        let channelTree = {channelId: 0, name: 'Server', id: 0};
+        const serverName = json.channels ? json.channels[0].serverName : "Server";
+        let channelTree = {channelId: 0, name: serverName, id: 0};
         eventTimeRange[0] = json.events.reduce((min, e) => min && (min < e[1]) ? min : e[1]) * 1000 - 12*3600000;
         eventTimeRange[1] = json.events.reduce((max, e) => max && (max > e[1]) ? max : e[1]) * 1000 + 12*3600000;
         var dateInp = document.getElementById('date');
@@ -82,7 +83,9 @@
       }
       tree.children = channels.filter((ch) => ch.parentId == tree.channelId).sort((a, b) => a.position - b.position);
       tree.clientCount = tree.events.reduce((sum, e) => sum+e[2], 0) / (tree.events.length > 0 ? tree.events.length : 1);
-      tree.activeCount = tree.events.length > 0 ? tree.events[0][2] : 0;
+
+      const recentActivity = tree.events.filter(e => e[1] > (new Date()).getTime()/1000 - 3600*24);
+      tree.activeCount = recentActivity.length > 2 ? recentActivity.reduce((acc, val) => val[2] > acc ? val[2] : acc, 0) : 0;
       for(const child of tree.children) {
         makeTree(child, channels.filter( ch => ch.parentId != tree.channelId), events.filter( e => e[0] != tree.id));
         tree.clientCount += child.clientCount;
@@ -135,6 +138,7 @@
         if(!li) {
           li = document.createElement('li');
           li.id = `li_${channel.channelId}`;
+          li.title = channel.description.replace(/\[\/?[^\]]+\]/g, "");
           if(prevLi.nextSibling) 
             ul.insertBefore(li, prevLi.nextSibling);
           else
@@ -196,7 +200,8 @@
           data[i][1] = data[i+1][1];
         }
         const name = prefix + formatHeadings(tree.name, false);
-        if(data.length > 0 && (data.length != 2 || data[0][1] != 0)) {
+        const maxClients = data.reduce((acc, val) => val[1] > acc ? val[1] : acc, 0);
+        if(data.length > 0 && maxClients > 0) {
           series.push({
             label: name,
             data: data,
@@ -208,7 +213,7 @@
           });
         }
         for(const channel of tree.children) {
-          iterChilds(channel, name + ' / ');
+          iterChilds(channel, formatHeadings(tree.name, false) + ' / ');
         }
       }
       iterChilds(tree);
@@ -236,6 +241,17 @@
           legend: {
             position: 'nw'
           }
+        });
+        plots[tree.channelId].hooks.drawOverlay.push(function(plot, cvs) {
+          if(!plot) { return; }
+          var cvsWidth = plot.width() / 2;
+
+          var text = tree.name.replace(/\[\/?[^\]]+\]/g, "");
+          cvs.font = "bold 16px Arial";
+          cvs.fillStyle = "#666666";
+          cvs.textAlign = 'center';
+          cvs.fillText(text, cvsWidth, 30);
+          return cvs;
         });
         $(placeholder).bind("plotpan plotzoom", function (event, plot) {
           var axes = plot.getAxes();

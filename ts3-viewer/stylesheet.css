@@ -1,5 +1,6 @@
 body {
-
+  font-family: Arial;
+  margin: 0;
 }
 .wrapper {
 	display: grid;
@@ -14,10 +15,16 @@ body {
 }
 .main-head {
 	grid-area: header;
+  padding: 60px;
+  text-align: center;
+  background: #1abc9c;
+  color: white;
+  font-size: 48pt;
 }
 #tree {
 	grid-area: tree;
 	clear: both;
+  margin-left: 10px;
 }
 #tree li {
   width: 100%;
@@ -52,6 +59,7 @@ ul {
 	flex-wrap: wrap;
 	align-content: flex-start;
 	align-items: stretch;
+  margin-right: 10px;
 }
 .demo-container {
 	box-sizing: border-box;
@@ -77,4 +85,5 @@ ul {
 
 #settings {
 	grid-area: settings;
+  margin-right: 10px;
 }

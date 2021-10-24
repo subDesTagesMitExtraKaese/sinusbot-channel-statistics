@@ -107,6 +107,7 @@
         el.appendChild(cnt);
         
         let label = document.createElement('label');
+        label.classList.add("name");
         label.htmlFor = `cb_${tree.channelId}`;
         el.appendChild(label);
 
@@ -125,13 +126,14 @@
       if(tree.events.length > 0)
         inp.nextSibling.textContent = tree.events[tree.events.length-1][2] != 0 ? tree.events[tree.events.length-1][2] : '';
 
-      inp.nextSibling.nextSibling.innerHTML = formatHeadings(tree.name);
+      inp.nextSibling.nextSibling.innerHTML = "";
+      inp.nextSibling.nextSibling.appendChild(formatHeadings(tree.name));
 
       let prevLi = {};
       let showSpacer = false;
       for(const channel of tree.children) {
         if(channel.clientCount == 0) {
-          showSpacer = formatHeadings(channel.name, false).length == 1;
+          showSpacer = tree.id == 0;
           continue;
         }
         let li = document.getElementById(`li_${channel.channelId}`);
@@ -145,7 +147,13 @@
             ul.appendChild(li);
         }
         if(showSpacer) {
-          li.classList.add("spacer");
+          let spacer = document.getElementById(`li_spacer_${channel.channelId}`);
+          if(!spacer) {
+            spacer = document.createElement('li');
+            spacer.classList.add("spacer");
+            spacer.id = `li_spacer_${channel.channelId}`;
+            ul.insertBefore(spacer, li);
+          }
           showSpacer = false;
         }
         prevLi = li;
@@ -153,21 +161,33 @@
       }
     }
     function formatHeadings(str, html = true) {
-      const res = /(?:\[(.)spacer[^\]]*\])?(.*)/.exec(str);
+      const res = /(?:\[(.?)spacer[^\]]*\])?(.*)/.exec(str);
       if(!html)
         return res[2];
+
+      var div = document.createElement("div");
+      div.classList.add("channel");
+      var span = document.createElement("span");
       switch(res[1]) {
         case '*':
-          return `<div class='channel'>${res[2].repeat(50)}</div>`;
+          res[2] = res[2].repeat(50);
+          break;
         case 'l':
-          return `<div class='channel' align='left'>${res[2]}</div>`;
+          div.classList.add("left");
+          break;
         case 'c':
-          return `<div class='channel' align='center'>${res[2]}</div>`;
+          div.classList.add("center");
+          break;
         case 'r':
-          return `<div class='channel' align='right'>${res[2]}</div>`;
+          div.classList.add("right");
+          break;
         default:
-          return `<div class='channel'>${res[2]}</div>`;
+          div.classList.add("normal");
+          break;
       }
+      span.textContent = res[2];
+      div.appendChild(span);
+      return div;
     }
 
     var plots = {};

@@ -208,10 +208,17 @@
       }
 
       if(!document.getElementById(`cb_${tree.channelId}`).checked) {
-        placeholder.parentNode.style.display = 'none';
+        placeholder.parentNode.style.border = 'none';
+        $(placeholder.parentNode).animate({height: 0, padding: 0, margin: 0, opacity: 0});
         return;
       } else {
-        placeholder.parentNode.style.display = 'block';
+        placeholder.parentNode.style.border = '1px solid #ddd';
+        $(placeholder.parentNode).show(100).animate({
+          height: "400px",
+          padding: "20px 15px 15px 15px",
+          margin: "0 auto 30px auto",
+          opacity: 1
+        });
       }
       let series = [];
       function iterChilds(tree, prefix="") {
